@@ -43,9 +43,17 @@ namespace MovieCollector_WinForm
 
         private void GetFilesAndFolders()
         {
-            InitializeGridView1();
-            
             resultArray.Clear();
+            dataGridView1.DataSource = null;
+            dataGridView1.Columns.Clear();
+            netList.Clear();
+            dataGridView2.DataSource = null;
+            dataGridView2.Columns.Clear();
+
+            index = 0;
+            InitializeGridView1();
+            InitializeGridView2();
+
             string[] files = System.IO.Directory.GetFiles(selectedPath);
             string[] folders = System.IO.Directory.GetDirectories(selectedPath);
 
@@ -64,6 +72,17 @@ namespace MovieCollector_WinForm
                 resultArray.Add(new Movie { Nr = index, DirectoryPath = selectedPath, Title = title });
             }
 
+            foreach (Movie mov in resultArray)
+                netList.Add(null);
+
+            dataGridView1.DataSource = resultArray;
+            dataGridView2.DataSource = netList;
+
+            index = 0;
+        }
+
+        private void InitializeGridView2()
+        {
             dataGridView2.AutoGenerateColumns = false;
             DataGridViewTextBoxColumn txtColm = new DataGridViewTextBoxColumn();
             txtColm.Width = 30;
@@ -87,7 +106,7 @@ namespace MovieCollector_WinForm
             imgColm.HeaderText = "Poster";
             //imgColm.DataPropertyName = "Img";
             imgColm.Image = Image.FromFile("C:\\Users\\Stefan\\Pictures\\movie.png", true);
-            
+
             dataGridView2.Columns.Add(imgColm);
 
             DataGridViewComboBoxColumn comCol = new DataGridViewComboBoxColumn();
@@ -97,13 +116,6 @@ namespace MovieCollector_WinForm
             //comCol.DisplayMember = "MovieRip";
             //comCol.ValueMember = "MovieRip";
             dataGridView2.Columns.Add(comCol);
-
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = resultArray;
-            foreach (Movie mov in resultArray)
-                netList.Add(null);
-            dataGridView2.DataSource = netList;
-            index = 0;
         }
 
         private void InitializeGridView1()
