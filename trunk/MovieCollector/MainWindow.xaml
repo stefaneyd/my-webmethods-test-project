@@ -1,0 +1,63 @@
+﻿<Window x:Class="MovieCollector.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        Title="MainWindow" Height="350" Width="950">
+    <Grid>
+        <TextBox Height="25" HorizontalAlignment="Left" Margin="12,21,0,0" Name="textBox1" VerticalAlignment="Top" Width="255" />
+        <Button Content="..." Height="23" HorizontalAlignment="Left" Margin="273,21,0,0" Name="button2" VerticalAlignment="Top" Width="23" Click="BrowseForFiles_Click" />
+        <Button Content="Go get it Mother focker" Height="23" HorizontalAlignment="Left" Margin="407,20,0,0" Name="button1" VerticalAlignment="Top" Width="171" Click="WebInfo_Click" />
+        <Button Content="Just Do it" Height="23" HorizontalAlignment="Left" Margin="855,20,0,0" Name="button3" VerticalAlignment="Top" Width="61" Click="RenameFolders_Click" />
+        
+        <DataGrid AutoGenerateColumns="False" AlternatingRowBackground="Gainsboro"  AlternationCount="2" 
+                  Height="255" HorizontalAlignment="Left" Margin="12,49,0,0" Name="dataGrid1" 
+                  VerticalAlignment="Top" Width="364" ItemsSource="{Binding}" 
+                  VerticalScrollBarVisibility="Disabled"
+                  HorizontalScrollBarVisibility="Disabled" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nr" Binding="{Binding Path=Nr}"  />
+                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" Width="338" />
+                <DataGridTemplateColumn Width="SizeToCells" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Visibility="Hidden" Height="50" Width="50" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid AutoGenerateColumns="False" AlternatingRowBackground="Gainsboro" 
+                  AlternationCount="2" Height="255" HorizontalAlignment="Left" 
+                  Margin="382,49,0,0" Name="dataGrid2" VerticalAlignment="Top" 
+                  Width="534" ItemsSource="{Binding}" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nr" Binding="{Binding Path=Nr}" />
+                <DataGridTextColumn Header="Title" Binding="{Binding Path=Title}" />
+                <DataGridTextColumn Header="Year" Binding="{Binding Path=Year}" />
+                <DataGridTemplateColumn Header="Poster" Width="SizeToCells" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding Poster}" Height="50" Width="50" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridCheckBoxColumn Header="Update" Binding="{Binding Path=IsEnabled, Mode=TwoWay}" />
+                <!--<DataGridComboBoxColumn Header="Movie Rip">
+                    <DataGridComboBoxColumn.EditingElementStyle>
+                        <Style TargetType="ComboBox">
+                            <Setter Property="ItemsSource" Value="{Binding Path=MovieRip}" />
+                        </Style>
+                    </DataGridComboBoxColumn.EditingElementStyle>
+                </DataGridComboBoxColumn>-->
+                <DataGridTemplateColumn CanUserReorder="True" CanUserResize="True" Header="Template Column">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding MovieRip}" DataContext="{Binding}" IsSynchronizedWithCurrentItem="True" SelectedIndex="{Binding index}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
