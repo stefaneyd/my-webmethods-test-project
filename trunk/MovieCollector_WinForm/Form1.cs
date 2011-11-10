@@ -24,6 +24,7 @@ namespace MovieCollector_WinForm
         public List<string> MovieRip = new List<string>() { "None", "DVDRIP", "BRRIP", "DVDSCR", "CAM", "TS", "R5", "R3", "PPVRIP", "HDRIP", "SCR" };
         int index = 0;
         Movie currentMovie = null;
+        string runningPath = string.Empty;
         public enum MovieRips : int
         {
             DVDRIP = 1,
@@ -39,6 +40,9 @@ namespace MovieCollector_WinForm
         public Form1()
         {
             InitializeComponent();
+
+            runningPath = Application.ExecutablePath.Substring(0, Application.ExecutablePath.LastIndexOf("\\")) + "\\TmpImg";
+
         }
 
         private void GetFilesAndFolders()
@@ -78,7 +82,7 @@ namespace MovieCollector_WinForm
             dataGridView1.DataSource = resultArray;
             dataGridView2.DataSource = netList;
 
-            index = 0;
+            //index = 0;
         }
 
         private void InitializeGridView2()
@@ -104,8 +108,9 @@ namespace MovieCollector_WinForm
 
             DataGridViewImageColumn imgColm = new DataGridViewImageColumn();
             imgColm.HeaderText = "Poster";
-            //imgColm.DataPropertyName = "Img";
-            imgColm.Image = Image.FromFile("C:\\Users\\Stefan\\Pictures\\movie.png", true);
+            imgColm.DataPropertyName = "PosterImage";
+            imgColm.ImageLayout = DataGridViewImageCellLayout.Zoom;
+            //imgColm.Image = Image.FromFile("C:\\Users\\Stefan\\Pictures\\movie.png", true);
 
             dataGridView2.Columns.Add(imgColm);
 
@@ -238,6 +243,21 @@ namespace MovieCollector_WinForm
             if (!string.IsNullOrEmpty(movie.Title))
                 movie.IsEnabled = true;
             netList[movie.Nr-1] =  movie;
+
+            if (!Directory.Exists(runningPath))
+                Directory.CreateDirectory(runningPath);
+
+            if (movie.Title != null || movie.Poster != null)
+            {
+                string img = runningPath + "\\" + (movie.Title + movie.Poster.Substring(movie.Poster.LastIndexOf("."))).Replace(':', ' ');
+                if (!File.Exists(img))
+                {
+                    WebClient wc = new WebClient();
+                    Uri uri = new Uri(movie.Poster);
+                    wc.DownloadFile(uri, img);
+                }
+                movie.PosterImage = Image.FromFile(img);
+            }
             //DataGridViewImageColumn imgColm = new DataGridViewImageColumn();
             //DataGridViewTextBoxColumn txtColm = new DataGridViewTextBoxColumn();
     }
@@ -510,7 +530,7 @@ namespace MovieCollector_WinForm
         private List<string> Act = new List<string>();
         private bool foundMovie = false;
         private List<string> Rip = new List<string>() { "None", "DVDRIP", "BRRIP", "DVDSCR", "CAM", "TS", "R5", "R3", "PPVRIP", "HDRIP", "SCR" };
-        public Image Img = null;
+        public Image PosterImage { get; set; }
         public int Nr { get; set; }
         public string Title { get; set; }
         public string Year { get; set; }
